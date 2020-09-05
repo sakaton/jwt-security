@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN" monitorInterval="120">
+
+	<Appenders>
+
+
+		<Console name="Simple-Console">
+			<PatternLayout>
+				<Pattern>%d{MMdd-HH:mm:ss.SSS} %-5p [%c{20}#%M(%L)[%t] [%X{traceId}] %m%n</Pattern>
+			</PatternLayout>
+		</Console>
+
+	</Appenders>
+
+
+	<Loggers>
+		<AsyncRoot level="INFO" includeLocation="true" additivity="false">
+			<AppenderRef ref="Simple-Console"/>
+		</AsyncRoot>
+	</Loggers>
+</Configuration>
