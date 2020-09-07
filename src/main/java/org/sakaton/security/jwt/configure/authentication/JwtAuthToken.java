@@ -17,11 +17,11 @@ public class JwtAuthToken extends AbstractAuthenticationToken {
 
 	private String credentials;
 
-	private int index;
+	private String token;
 
-	public JwtAuthToken(int index) {
+	public JwtAuthToken(String token) {
 		super(Collections.emptyList());
-		this.index = index;
+		this.token = token;
 	}
 
 	public JwtAuthToken(UserDetails principal, Collection<? extends GrantedAuthority> authorities) {

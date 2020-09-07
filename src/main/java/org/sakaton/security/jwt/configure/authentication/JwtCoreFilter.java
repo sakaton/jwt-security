@@ -1,5 +1,6 @@
 package org.sakaton.security.jwt.configure.authentication;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
@@ -27,7 +28,9 @@ public class JwtCoreFilter extends AbstractAuthenticationProcessingFilter {
 	@Override
 	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException, IOException, ServletException {
 
-		Authentication authResult =getAuthenticationManager().authenticate(new JwtAuthToken(1));
+		String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+
+		Authentication authResult = getAuthenticationManager().authenticate(new JwtAuthToken(authorization));
 
 		return authResult;
 	}
