@@ -1,4 +1,4 @@
-package org.sakaton.security.jwt.configure.authentication;
+package org.sakaton.security.jwt.configure.security.authentication;
 
 import org.sakaton.security.jwt.service.JwtUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +32,6 @@ public class JwtAuthProvider implements AuthenticationProvider {
 
 	@Override
 	public boolean supports(Class<?> authentication) {
-		return authentication.isAssignableFrom(JwtAuthToken.class);
+		return authentication.isAssignableFrom(JwtAuthenticationToken.class);
 	}
 }

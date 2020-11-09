@@ -1,4 +1,4 @@
-package org.sakaton.security.jwt.configure.authentication;
+package org.sakaton.security.jwt.configure.security.authentication;
 
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -11,7 +11,7 @@ import java.util.Collections;
  * @author sakaton
  * @version created on 2020/4/9.
  */
-public class JwtAuthToken extends AbstractAuthenticationToken {
+public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
 	private UserDetails principal;
 
@@ -19,12 +19,12 @@ public class JwtAuthToken extends AbstractAuthenticationToken {
 
 	private String token;
 
-	public JwtAuthToken(String token) {
+	public JwtAuthenticationToken(String token) {
 		super(Collections.emptyList());
 		this.token = token;
 	}
 
-	public JwtAuthToken(UserDetails principal, Collection<? extends GrantedAuthority> authorities) {
+	public JwtAuthenticationToken(UserDetails principal, Collection<? extends GrantedAuthority> authorities) {
 		super(authorities);
 		this.principal = principal;
 
