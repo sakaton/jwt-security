@@ -20,11 +20,15 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.header.Header;
@@ -32,9 +36,12 @@ import org.springframework.security.web.header.writers.StaticHeadersWriter;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestHeaderRequestMatcher;
+import org.springframework.web.filter.DelegatingFilterProxy;
 
 import javax.servlet.Filter;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author sakaton
@@ -49,6 +56,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
+		http.requestMatcher(new AntPathRequestMatcher("/api/**"));
+
 		http = http.httpBasic().disable()
 				.formLogin().disable()
 				.csrf().disable()
@@ -77,21 +86,39 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * {@link FilterChainProxy}
+	 * {@link DelegatingFilterProxy} -->> 代理 {@link FilterChainProxy}
 	 *
-	 * @param web
-	 * @throws Exception
+	 * @param web web
+	 * @throws Exception 抛出异常
 	 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		// web.ignoring().mvcMatchers("/api/product/**", "/error").and().addSecurityFilterChainBuilder(new HttpSecurity(null, null, null));
+		ObjectPostProcessor<Object> object = new ObjectPostProcessor<Object>() {
+			@Override
+			public Object postProcess(Object object) {
+				throw new IllegalStateException(
+						ObjectPostProcessor.class.getName()
+								+ " is a required bean. Ensure you have used @EnableWebSecurity and @Configuration");
+			}
+		};
+		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+		web.ignoring().mvcMatchers("/api/product/**", "/error");
+
+		AuthenticationManagerBuilder builder = new AuthenticationManagerBuilder(object);
+		Map<Class<? extends Object>, Object> sharedObjects = new HashMap<>(16);
+		HttpSecurity httpSecurity = new HttpSecurity(object, builder, sharedObjects);
+		httpSecurity.requestMatcher(new AntPathRequestMatcher("/demo/**"));
+		httpSecurity.addFilterBefore(builderJwtAuthenticationFilter(), LogoutFilter.class);
+		// 添加 httpSecurity
+		web.addSecurityFilterChainBuilder(httpSecurity);
 	}
 
 	/**
 	 * 构建 核心处理token过滤器
 	 *
 	 * @return 返回 {@link Filter}
-	 * @throws Exception
+	 * @throws Exception Exception 抛出异常
 	 */
 	private Filter builderJwtAuthenticationFilter() throws Exception {
 		AndRequestMatcher andRequestMatcher = new AndRequestMatcher(new AntPathRequestMatcher(
