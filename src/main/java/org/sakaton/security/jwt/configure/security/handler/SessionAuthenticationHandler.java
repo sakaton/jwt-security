@@ -1,4 +1,4 @@
-package org.sakaton.security.jwt.configure.security.authentication;
+package org.sakaton.security.jwt.configure.security.handler;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author zhengshijun
  * @version created on 2020/4/13.
  */
-public class SessionAuthStrategy implements SessionAuthenticationStrategy {
+public class SessionAuthenticationHandler implements SessionAuthenticationStrategy {
 	@Override
 	public void onAuthentication(Authentication authentication,
 			HttpServletRequest request, HttpServletResponse response) throws SessionAuthenticationException {

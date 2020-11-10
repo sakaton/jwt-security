@@ -1,13 +1,20 @@
 package org.sakaton.security.jwt.configure.security;
 
-import org.sakaton.security.jwt.configure.security.authentication.JwtAuthFailureHandler;
-import org.sakaton.security.jwt.configure.security.authentication.JwtAuthProvider;
-import org.sakaton.security.jwt.configure.security.authentication.JwtAuthSuccessHandler;
 import org.sakaton.security.jwt.configure.security.authentication.JwtAuthenticationFilter;
+import org.sakaton.security.jwt.configure.security.authentication.JwtAuthenticationProvider;
 import org.sakaton.security.jwt.configure.security.authentication.MutateRequestFilter;
-import org.sakaton.security.jwt.configure.security.authentication.SessionAuthStrategy;
+import org.sakaton.security.jwt.configure.security.handler.JwtAccessDeniedHandler;
+import org.sakaton.security.jwt.configure.security.handler.JwtAuthFailureHandler;
+import org.sakaton.security.jwt.configure.security.handler.JwtAuthSuccessHandler;
+import org.sakaton.security.jwt.configure.security.handler.JwtLogoutHandler;
+import org.sakaton.security.jwt.configure.security.handler.JwtLogoutSuccessHandler;
+import org.sakaton.security.jwt.configure.security.handler.SessionAuthenticationHandler;
+import org.sakaton.security.jwt.configure.security.handler.TokenManageHandler;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -18,6 +25,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.header.Header;
 import org.springframework.security.web.header.writers.StaticHeadersWriter;
@@ -35,6 +43,8 @@ import java.util.Arrays;
 @Order(Ordered.HIGHEST_PRECEDENCE + 100)
 @Configuration
 @EnableWebSecurity
+@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
+@Import({JwtLogoutHandler.class, JwtLogoutSuccessHandler.class})
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 	@Override
@@ -54,16 +64,27 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 				new Header("Access-control-Allow-Origin", "*"),
 				new Header("Access-Control-Expose-Headers", "Authorization"))))
 				.and()
-				.addFilterBefore(builderJwtAuthenticationFilter(), LogoutFilter.class)
-				.exceptionHandling().authenticationEntryPoint(new JwtAuthFailureHandler()::onAuthenticationFailure);
+				.addFilterBefore(builderJwtAuthenticationFilter(), LogoutFilter.class);
+
+		// 未登录
+		http.exceptionHandling().authenticationEntryPoint(new JwtAuthFailureHandler()::onAuthenticationFailure)
+				// 没有权限
+				.accessDeniedHandler(new JwtAccessDeniedHandler());
+
 
 		http.addFilterAfter(new MutateRequestFilter(), JwtAuthenticationFilter.class);
 
 	}
 
+	/**
+	 * {@link FilterChainProxy}
+	 *
+	 * @param web
+	 * @throws Exception
+	 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-
+		// web.ignoring().mvcMatchers("/api/product/**", "/error").and().addSecurityFilterChainBuilder(new HttpSecurity(null, null, null));
 	}
 
 	/**
@@ -83,7 +104,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 		coreFilter.setAuthenticationSuccessHandler(new JwtAuthSuccessHandler());
 		coreFilter.setAuthenticationManager(authenticationManager());
 		coreFilter.setContinueChainBeforeSuccessfulAuthentication(true);
-		coreFilter.setSessionAuthenticationStrategy(new SessionAuthStrategy());
+		coreFilter.setSessionAuthenticationStrategy(new SessionAuthenticationHandler());
 		return coreFilter;
 	}
 
@@ -97,6 +118,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 	 */
 	@Bean
 	public AuthenticationProvider jwtAuthProvider() {
-		return new JwtAuthProvider();
+		return new JwtAuthenticationProvider();
+	}
+
+	/**
+	 * token 管理器
+	 *
+	 * @return 返回结果
+	 */
+	@Bean
+	@ConditionalOnMissingBean(TokenManageHandler.class)
+	public TokenManageHandler tokenManageHandler() {
+		return new TokenManageHandler.Default();
 	}
 }

@@ -39,4 +39,8 @@ public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 	public Object getPrincipal() {
 		return principal;
 	}
+
+	public String getToken() {
+		return token;
+	}
 }

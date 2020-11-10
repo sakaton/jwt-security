@@ -1,4 +1,4 @@
-package org.sakaton.security.jwt.configure.security.authentication;
+package org.sakaton.security.jwt.configure.security.handler;
 
 
 import org.springframework.http.HttpStatus;
