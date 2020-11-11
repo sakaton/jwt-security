@@ -6,7 +6,12 @@
 
 	<groupId>org.sakaton</groupId>
 	<artifactId>jwt-security</artifactId>
+	<packaging>pom</packaging>
 	<version>1.0-SNAPSHOT</version>
+	<modules>
+		<module>reactive</module>
+		<module>servlet</module>
+	</modules>
 
 	<name>jwt-security</name>
 	<properties>
@@ -72,20 +77,25 @@
 			<scope>test</scope>
 		</dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-		</dependency>
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-log4j2</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
 
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-security</artifactId>-->
-<!--		</dependency>-->
+		<!--		<dependency>-->
+		<!--			<groupId>org.springframework.boot</groupId>-->
+		<!--			<artifactId>spring-boot-starter-security</artifactId>-->
+		<!--		</dependency>-->
 
 		<dependency>
 			<groupId>org.springframework.security</groupId>
