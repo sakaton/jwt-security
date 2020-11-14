@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.reactive.config.WebFluxConfigurer;
 
 /**
- * @author zhengshijun
+ * @author sakaton
  * @version created on 2020/11/11.
  */
 @Configuration

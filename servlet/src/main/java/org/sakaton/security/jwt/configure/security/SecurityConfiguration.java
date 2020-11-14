@@ -83,6 +83,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
 		http.addFilterAfter(new MutateRequestFilter(), JwtAuthenticationFilter.class);
 
+		// 新增
+		// http.apply();
+
 	}
 
 	/**
