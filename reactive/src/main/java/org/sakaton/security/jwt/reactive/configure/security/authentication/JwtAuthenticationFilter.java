@@ -12,6 +12,7 @@ import org.springframework.security.web.server.WebFilterExchange;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.security.web.server.authentication.ServerAuthenticationFailureHandler;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
+import org.springframework.security.web.server.authorization.AuthorizationWebFilter;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
@@ -22,6 +23,8 @@ import java.util.function.Function;
 
 /**
  * {@link AuthenticationWebFilter}
+ *   {@link AuthorizationWebFilter}
+ *      {@link ReactiveSecurityContextHolder#getContext()}
  *
  * @author sakaton
  * @version created on 2020/11/14.
@@ -66,6 +69,7 @@ public class JwtAuthenticationFilter implements WebFilter {
 
 		return authenticationSuccessHandler
 				.onAuthenticationSuccess(webFilterExchange, authentication)
+				// 此处很重要设置该Context 上下文的持有凭证 {@link reactor.core.publisher.Mono.subscriberContext(reactor.util.context.Context)}
 				.subscriberContext(ReactiveSecurityContextHolder.withAuthentication(authentication));
 	}
 
