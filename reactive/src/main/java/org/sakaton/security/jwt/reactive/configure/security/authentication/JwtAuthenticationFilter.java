@@ -3,6 +3,7 @@ package org.sakaton.security.jwt.reactive.configure.security.authentication;
 import org.sakaton.security.jwt.reactive.configure.security.handler.JwtAuthFailureHandler;
 import org.sakaton.security.jwt.reactive.configure.security.handler.JwtAuthSuccessHandler;
 import org.sakaton.security.jwt.reactive.configure.security.handler.JwtAuthenticationEntryPoint;
+import org.springframework.boot.actuate.web.trace.reactive.HttpTraceWebFilter;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -22,6 +23,7 @@ import reactor.core.publisher.Mono;
 import java.util.function.Function;
 
 /**
+ *  {@link HttpTraceWebFilter}
  * {@link AuthenticationWebFilter}
  *   {@link AuthorizationWebFilter}
  *      {@link ReactiveSecurityContextHolder#getContext()}
