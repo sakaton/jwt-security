@@ -11,6 +11,7 @@ import org.sakaton.security.jwt.configure.security.handler.JwtLogoutSuccessHandl
 import org.sakaton.security.jwt.configure.security.handler.SessionAuthenticationHandler;
 import org.sakaton.security.jwt.configure.security.handler.TokenManageHandler;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -47,6 +48,8 @@ import java.util.Map;
  * @author sakaton
  * @version created on 2019/6/27.
  */
+@ConditionalOnProperty(prefix = "spring.security", value = "enabled",
+		havingValue = "true", matchIfMissing = true)
 @Order(Ordered.HIGHEST_PRECEDENCE + 100)
 @Configuration
 @EnableWebSecurity

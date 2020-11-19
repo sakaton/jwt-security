@@ -3,9 +3,7 @@ package org.sakaton.security.jwt.reactive.configure.security;
 import org.sakaton.security.jwt.reactive.configure.security.authentication.JwtAuthenticationFilter;
 import org.sakaton.security.jwt.reactive.configure.security.authentication.JwtAuthenticationProvider;
 import org.sakaton.security.jwt.reactive.configure.security.handler.JwtAccessDeniedHandler;
-import org.sakaton.security.jwt.reactive.configure.security.handler.JwtAuthFailureHandler;
 import org.sakaton.security.jwt.reactive.configure.security.handler.JwtAuthenticationEntryPoint;
-import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +18,6 @@ import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatchers;
 import org.springframework.web.server.WebFilter;
-import reactor.core.publisher.Mono;
 
 import java.util.List;
 
