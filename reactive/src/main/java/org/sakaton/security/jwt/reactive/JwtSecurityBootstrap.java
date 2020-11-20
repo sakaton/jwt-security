@@ -2,6 +2,7 @@ package org.sakaton.security.jwt.reactive;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.web.reactive.DispatcherHandler;
 import org.springframework.web.server.handler.FilteringWebHandler;
@@ -15,7 +16,7 @@ import org.springframework.web.server.handler.FilteringWebHandler;
  * @author sakaton
  * @version created on 2020/11/11.
  */
-@SpringBootApplication
+@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
 public class JwtSecurityBootstrap {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext applicationContext =

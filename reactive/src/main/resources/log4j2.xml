@@ -13,7 +13,7 @@
 
 
 	<Loggers>
-		<AsyncRoot level="DEBUG" includeLocation="true" additivity="false">
+		<AsyncRoot level="INFO" includeLocation="true" additivity="false">
 			<AppenderRef ref="Simple-Console"/>
 		</AsyncRoot>
 	</Loggers>
