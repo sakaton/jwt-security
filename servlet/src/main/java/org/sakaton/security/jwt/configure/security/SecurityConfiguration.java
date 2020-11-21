@@ -28,8 +28,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.header.Header;
@@ -107,7 +105,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 								+ " is a required bean. Ensure you have used @EnableWebSecurity and @Configuration");
 			}
 		};
-		PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+		// PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
 		web.ignoring().mvcMatchers("/api/product/**", "/error");
 
